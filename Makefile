@@ -3,6 +3,12 @@ HUGO = hugo
 
 all: docs
 
+serve: .deps-lock
+	${HUGO} server \
+		--disableFastRender \
+		--noHTTPCache \
+		--ignoreCache
+
 docs: .public-lock
 .public-lock: .deps-lock config.toml $(shell find content -type f)
 	${HUGO} --gc --minify
@@ -11,8 +17,8 @@ docs: .public-lock
 .deps-lock:
 	@${GO} version > /dev/null
 	@${HUGO} version > /dev/null
-	${GO} mod init github.com/tavo-wasd-gh/heateq
-	${HUGO} mod get -u
+	${GO} mod init github.com/tavo-wasd-gh/heateq > /dev/null
+	${HUGO} mod get -u > /dev/null
 	@touch .deps-lock
 
 clean:
@@ -23,4 +29,4 @@ clean:
 		.deps-lock \
 		.public-lock
 
-.PHONY: all docs clean
+.PHONY: all docs serve clean

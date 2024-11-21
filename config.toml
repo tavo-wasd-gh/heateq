@@ -19,10 +19,8 @@ enableMissingTranslationPlaceholders = false
 [params]
     math = true
     description = "Métodos para resolver numéricamente la ecuación de calor en dos dimensiones"
-
     menu_style = "open-menu"
-
-    github_repository = "#"
+    github_repository = "https://github.com/tavo-wasd-gh/heateq"
 
 [module]
     [[module.imports]]
