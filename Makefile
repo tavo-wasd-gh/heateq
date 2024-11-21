@@ -5,14 +5,14 @@ all: docs
 
 docs: .public-lock
 .public-lock: .deps-lock config.toml $(shell find content -type f)
-	${HUGO} --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+	${HUGO} --gc --minify
 	@touch .public-lock
 
 .deps-lock:
 	@${GO} version > /dev/null
 	@${HUGO} version > /dev/null
-	${GO} mod init heateq || true
-	${HUGO} mod get -u || true
+	${GO} mod init github.com/tavo-wasd-gh/heateq
+	${HUGO} mod get -u
 	@touch .deps-lock
 
 clean:
