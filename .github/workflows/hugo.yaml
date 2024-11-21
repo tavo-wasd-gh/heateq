@@ -45,7 +45,7 @@ jobs:
           sudo tar -C /usr/local -xzf /tmp/go.tar.gz
           echo "export PATH=$PATH:/usr/local/go/bin" >> $HOME/.bashrc
           echo "export PATH=$PATH:/usr/local/go/bin" >> $GITHUB_ENV
-          go version
+          go mod init github.com/tavo-wasd-gh/heateq
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
@@ -55,7 +55,7 @@ jobs:
           HUGO_ENVIRONMENT: production
           TZ: America/Costa_Rica
         run: |
-          hugo mod get -u && \
+          hugo mod get -u
           hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
