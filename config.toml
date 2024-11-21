@@ -1,0 +1,29 @@
+baseURL = '/'
+languageCode = 'es'
+title = 'heateq'
+
+DefaultContentLanguage = "es"
+defaultContentLanguage = "es"
+defaultContentLanguageInSubdir= false
+enableMissingTranslationPlaceholders = false
+
+[markup]
+    [markup.goldmark]
+        [markup.goldmark.extensions]
+            [markup.goldmark.extensions.passthrough]
+                enable = true
+                [markup.goldmark.extensions.passthrough.delimiters]
+                block = [['\[', '\]'], ['$$', '$$']]
+                inline = [['\(', '\)'], ['$', '$']]
+
+[params]
+    math = true
+    description = "Métodos para resolver numéricamente la ecuación de calor en dos dimensiones"
+
+    menu_style = "open-menu"
+
+    github_repository = "#"
+
+[module]
+    [[module.imports]]
+        path = 'github.com/thingsym/hugo-theme-techdoc'
