@@ -1,28 +1,54 @@
+BIN = heateq
+
 GO = go
 HUGO = hugo
 
-all: docs
+CXX = g++
+CXXFLAGS = -std=c++11 -O2 -Wall -Wextra -Wpedantic
+LXX = g++
+LXXFLAGS =
+
+CPPSRC = \
+			src/cpp/main.cpp \
+			src/cpp/heateq.cpp \
+
+CPPHEAD = \
+			src/cpp/heateq.hpp \
+
+CPPOBJ = $(CPPSRC:.cpp=.o)
+
+all: $(BIN)
+
+$(BIN): $(CPPOBJ)
+	$(LXX) $(LXXFLAGS) -o $@ $^
+
+src/%.o: src/%.cpp $(CPPHEAD)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 serve: .deps-lock
-	${HUGO} server \
+	$(HUGO) server \
 		--disableFastRender \
 		--noHTTPCache \
 		--ignoreCache
 
 docs: .public-lock
 .public-lock: .deps-lock config.toml $(shell find content -type f)
-	${HUGO} --gc --minify
+	$(HUGO) --gc --minify
 	@touch .public-lock
 
 .deps-lock:
-	@${GO} version > /dev/null
-	@${HUGO} version > /dev/null
-	${GO} mod init github.com/tavo-wasd-gh/heateq > /dev/null
-	${HUGO} mod get -u > /dev/null
+	@$(GO) version > /dev/null
+	@$(HUGO) version > /dev/null
+	$(GO) mod init github.com/tavo-wasd-gh/heateq > /dev/null
+	$(HUGO) mod get -u > /dev/null
 	@touch .deps-lock
 
 clean:
-	rm -rf public/ \
+	rm -rf $(CPPOBJ) $(BIN)
+
+clean-all: clean
+	rm -rf \
+		public/ \
 		resources/ \
 		go.mod go.sum \
 		.hugo_build.lock \

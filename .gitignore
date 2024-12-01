@@ -5,3 +5,5 @@ go.mod
 go.sum
 .deps-lock
 .public-lock
+heateq
+**/*.o
