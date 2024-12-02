@@ -14,8 +14,8 @@ class Heatmap {
 	Heatmap() = delete;
 
 	// 2D
-	Heatmap(size_t rows, size_t cols, double diff, double res);
-	Heatmap(size_t rows, size_t cols, double diff, double res, double temp);
+	Heatmap(size_t m, size_t n, double c, double d);
+	Heatmap(size_t m, size_t n, double c, double d, double temp);
 
 	// Copy
 	Heatmap(const Heatmap &obj);
@@ -30,7 +30,7 @@ class Heatmap {
 
 	size_t Size();
 
-	void Set(size_t index, double value);
+	void Set(size_t i, size_t j, double value);
 
 	std::string Display();
 

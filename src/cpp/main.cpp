@@ -12,7 +12,7 @@ int main()
 
 	for (size_t i = 21; i < 29; i++) {
 		for (size_t j = 33; j < 41; j++) {
-			placa.Set((i * cols) + j, 393.15);
+			placa.Set(i, j, 393.15);
 		}
 	}
 
