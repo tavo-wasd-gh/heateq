@@ -28,7 +28,12 @@ class Heatmap {
 
 	~Heatmap();
 
+	// Simulation
+	void StepFDM(double dt);
+
 	size_t Size();
+	size_t Rows();
+	size_t Cols();
 
 	void Set(size_t i, size_t j, double value);
 
@@ -36,8 +41,7 @@ class Heatmap {
 
 	std::string Report();
 
-	// Simulation
-	void StepFDM(double dt);
+	double Avg();
 
     private:
 	size_t n; // N dimension of MxN mesh

@@ -39,12 +39,14 @@ Armados con estas expresiones, reemplazamos en la ecuación de calor para
 obtener:
 
 $$
-\frac{T_{i,j}^{l+1} - T_{i,j}^{l}}{\Delta t} = c^2 \left[ \frac{T_{i+1,j}^{l} - 2T_{i,j}^{l} + T_{i-1,j}^{l}}{(\Delta x)^2} + \frac{T_{i,j+1}^{l} - 2T_{i,j}^{l} + T_{i,j-1}^{l}}{(\Delta y)^2} \right]
+\frac{T_{i,j}^{l+1} - T_{i,j}^{l}}{\Delta t} = c \left[ \frac{T_{i+1,j}^{l} - 2T_{i,j}^{l} + T_{i-1,j}^{l}}{(\Delta x)^2} + \frac{T_{i,j+1}^{l} - 2T_{i,j}^{l} + T_{i,j-1}^{l}}{(\Delta y)^2} \right]
 $$
 
 Finalmente, despejando $T_{i,j}^{l+1}$ (la temperatura en la iteración
 consecuente):
 
 $$
-T_{i,j}^{l+1} = T_{i,j}^{l} + c^2 \cdot \Delta t \cdot \left[ \frac{T_{i+1,j}^{l} - 2T_{i,j}^{l} + T_{i-1,j}^{l}}{(\Delta x)^2} + \frac{T_{i,j+1}^{l} - 2T_{i,j}^{l} + T_{i,j-1}^{l}}{(\Delta y)^2} \right]
+T_{i,j}^{l+1} = T_{i,j}^{l} + c \cdot \Delta t \cdot \left[ \frac{T_{i+1,j}^{l} - 2T_{i,j}^{l} + T_{i-1,j}^{l}}{(\Delta x)^2} + \frac{T_{i,j+1}^{l} - 2T_{i,j}^{l} + T_{i,j-1}^{l}}{(\Delta y)^2} \right]
 $$
+
+Note que para mantener el criterio de estabilidad se debe cumplir $\Delta t \leq \frac{\Delta x^2}{2c}$

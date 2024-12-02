@@ -1,6 +1,7 @@
 #include <cmath>
 #include <sstream>
 #include <string>
+#include <numeric>
 #include "heatmap.hpp"
 
 Heatmap::Heatmap(size_t m, size_t n, double c, double d)
@@ -53,7 +54,7 @@ Heatmap &Heatmap::operator=(const Heatmap &obj)
 double Heatmap::operator[](size_t i)
 {
 	if (i >= map.size()) {
-		throw std::out_of_range("Index out of range");
+		throw std::out_of_range("index out of range");
 	}
 
 	return map[i];
@@ -67,8 +68,10 @@ Heatmap::~Heatmap()
 void Heatmap::StepFDM(double dt)
 {
 	if (dt > pow(d, 2) / (2 * c)) {
-		throw std::invalid_argument(
-			"Time step exceeds stability limit");
+		std::ostringstream error;
+		error << "time step dt = " << dt << " exceeds stability limit: ";
+		error << "dt <= " << pow(d, 2) / (2 * c);
+		throw std::invalid_argument(error.str());
 	}
 
 	size_t m = map.size() / n;
@@ -77,14 +80,14 @@ void Heatmap::StepFDM(double dt)
 
 	for (size_t i = 1; i < m - 1; ++i) {
 		for (size_t j = 1; j < n - 1; ++j) {
-			double ddT_x = (prev[(i + 1) * n + j] -
-					2 * prev[i * n + j] +
-					prev[(i - 1) * n + j]) /
-				       pow(d, 2);
-			double ddT_y = (prev[i * n + (j + 1)] -
-					2 * prev[i * n + j] +
-					prev[i * n + (j - 1)]) /
-				       pow(d, 2);
+			double ddT_x =
+				(prev[(i + 1) * n + j] - 2 * prev[i * n + j] +
+				 prev[(i - 1) * n + j]) /
+				pow(d, 2);
+			double ddT_y =
+				(prev[i * n + (j + 1)] - 2 * prev[i * n + j] +
+				 prev[i * n + (j - 1)]) /
+				pow(d, 2);
 			map[i * n + j] =
 				prev[i * n + j] + c * dt * (ddT_x + ddT_y);
 		}
@@ -96,10 +99,20 @@ size_t Heatmap::Size()
 	return map.size();
 }
 
+size_t Heatmap::Rows()
+{
+	return map.size() / n;
+}
+
+size_t Heatmap::Cols()
+{
+	return n;
+}
+
 void Heatmap::Set(size_t i, size_t j, double value)
 {
 	if (i >= map.size() / n || j >= n) {
-		throw std::out_of_range("Index out of range");
+		throw std::out_of_range("index out of range");
 	}
 
 	map[i * n + j] = value;
@@ -145,4 +158,10 @@ std::string Heatmap::Report()
 	}
 
 	return report.str();
+}
+
+double Heatmap::Avg()
+{
+	return std::accumulate(map.begin(), map.end(), 0) /
+	       static_cast<double>(map.size());
 }
