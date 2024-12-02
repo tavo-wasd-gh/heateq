@@ -15,7 +15,7 @@ puntos en el espacio para los cuales se puedan evaluar variables de estado
 
 Basándonos en esta discretización, escribimos la aproximación de la ecuación
 de calor y las derivadas propuestas por
-[Powell, A. (2002)](/referencias):
+[Powell, A. (2002)](/heateq/referencias):
 
 $$
 \frac{\partial T}{\partial t} \approx \frac{T_{i,j}^{l+1} - T_{i,j}^{l}}{\Delta t}

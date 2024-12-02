@@ -10,10 +10,10 @@ LXXFLAGS =
 
 CPPSRC = \
 			src/cpp/main.cpp \
-			src/cpp/heateq.cpp \
+			src/cpp/heatmap.cpp \
 
 CPPHEAD = \
-			src/cpp/heateq.hpp \
+			src/cpp/heatmap.hpp \
 
 CPPOBJ = $(CPPSRC:.cpp=.o)
 

@@ -2,7 +2,7 @@
 #include <cmath>
 #include <string>
 #include <sstream>
-#include "heateq.hpp"
+#include "heatmap.hpp"
 
 Heatmap::Heatmap(size_t rows, size_t cols, double diffusivity, double resolution) :
   n(cols), res(resolution), c(diffusivity) {
