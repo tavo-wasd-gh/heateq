@@ -5,14 +5,14 @@ int main()
 {
 	size_t rows = 50;
 	size_t cols = 75;
-	double c = 22.8e-6;
+	double alpha = 22.8e-6;
 	double res = 8e-3;
 
-	Heatmap placa(rows, cols, c, res);
+	Heatmap placa(rows, cols, alpha, res);
 
 	for (size_t i = 21; i < 29; i++) {
 		for (size_t j = 33; j < 41; j++) {
-			placa.Set((i * cols) + j, 373.15);
+			placa.Set((i * cols) + j, 393.15);
 		}
 	}
 

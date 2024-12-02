@@ -4,13 +4,18 @@
 #include <string>
 #include <vector>
 
+#ifndef HM_AMBIENT
+#define HM_AMBIENT 293.15
+#endif
+
 class Heatmap {
     public:
 	// Default
 	Heatmap() = delete;
 
 	// 2D
-	Heatmap(size_t rows, size_t cols, double diffusivity, double res);
+	Heatmap(size_t rows, size_t cols, double diff, double res);
+	Heatmap(size_t rows, size_t cols, double diff, double res, double temp);
 
 	// Copy
 	Heatmap(const Heatmap &obj);
@@ -35,10 +40,10 @@ class Heatmap {
 	void StepFDM(double dt);
 
     private:
-	size_t n;
-	std::vector<double> map;
-	double res;
-	double c;
+	size_t n; // N dimension of MxN mesh
+	std::vector<double> map; // mesh matrix
+	double d; // node length
+	double c; // (material) diffusivity
 };
 
 #endif // HEATMAP_HPP

@@ -1,32 +1,49 @@
-#include "heatmap.hpp"
 #include <cmath>
 #include <sstream>
 #include <string>
+#include "heatmap.hpp"
 
-Heatmap::Heatmap(size_t rows, size_t cols, double diffusivity,
-		 double resolution)
+Heatmap::Heatmap(size_t rows, size_t cols, double diff, double res)
 	: n(cols)
-	, res(resolution)
-	, c(diffusivity)
+	, d(res)
+	, c(diff)
 {
 	if (cols == 0 || rows == 0) {
 		throw std::out_of_range("Must have at least one element");
 	}
 
-	size_t N = rows * cols;
-	if (N / rows != cols) {
+	size_t size = rows * cols;
+	if (size / rows != cols) {
 		throw std::overflow_error(
 			"Total elements exceeds maximum 'size_t' value");
 	}
 
-	map = std::vector<double>(N, 0.0);
+	map = std::vector<double>(size, HM_AMBIENT);
+}
+
+Heatmap::Heatmap(size_t rows, size_t cols, double diff, double res, double temp)
+	: n(cols)
+	, d(res)
+	, c(diff)
+{
+	if (cols == 0 || rows == 0) {
+		throw std::out_of_range("Must have at least one element");
+	}
+
+	size_t size = rows * cols;
+	if (size / rows != cols) {
+		throw std::overflow_error(
+			"Total elements exceeds maximum 'size_t' value");
+	}
+
+	map = std::vector<double>(size, temp);
 }
 
 Heatmap::Heatmap(const Heatmap &obj)
 {
 	n = obj.n;
 	map = obj.map;
-	res = obj.res;
+	d = obj.d;
 	c = obj.c;
 }
 
@@ -34,7 +51,7 @@ Heatmap &Heatmap::operator=(const Heatmap &obj)
 {
 	n = obj.n;
 	map = obj.map;
-	res = obj.res;
+	d = obj.d;
 	c = obj.c;
 	return *this;
 }
@@ -55,7 +72,7 @@ Heatmap::~Heatmap()
 
 void Heatmap::StepFDM(double dt)
 {
-	if (dt > pow(res, 2) / (2 * c)) {
+	if (dt > pow(d, 2) / (2 * c)) {
 		throw std::invalid_argument(
 			"Time step exceeds stability limit");
 	}
@@ -71,11 +88,11 @@ void Heatmap::StepFDM(double dt)
 			double ddT_x = (prev[(i + 1) * cols + j] -
 					2 * prev[i * cols + j] +
 					prev[(i - 1) * cols + j]) /
-				       pow(res, 2);
+				       pow(d, 2);
 			double ddT_y = (prev[i * cols + (j + 1)] -
 					2 * prev[i * cols + j] +
 					prev[i * cols + (j - 1)]) /
-				       pow(res, 2);
+				       pow(d, 2);
 			map[i * cols + j] =
 				prev[i * cols + j] + c * dt * (ddT_x + ddT_y);
 		}
@@ -131,7 +148,7 @@ std::string Heatmap::Report()
 {
 	std::ostringstream report;
 
-	report << c << "," << n << "," << res << ",";
+	report << c << "," << n << "," << d << ",";
 
 	for (size_t i = 0; i < map.size(); ++i) {
 		report << map[i] << ",";

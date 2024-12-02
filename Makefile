@@ -9,8 +9,8 @@ LXX = g++
 LXXFLAGS =
 
 CPPSRC = \
-			src/cpp/main.cpp \
 			src/cpp/heatmap.cpp \
+			src/cpp/main.cpp \
 
 CPPHEAD = \
 			src/cpp/heatmap.hpp \
