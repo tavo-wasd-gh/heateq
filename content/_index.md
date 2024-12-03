@@ -3,9 +3,9 @@ title: "Inicio"
 description: "Métodos para resolver numéricamente la ecuación de calor en dos dimensiones"
 ---
 
-![](/heateq/heat.gif)
-
 # Ecuación de calor en 2D
+
+![](/heateq/heat.gif)
 
 Suponga que $T = T(x, y, t)$ es una variable escalar que define la temperatura
 de una región de dos dimensiones en el plano Cartesiano $(x, y)$ como función
