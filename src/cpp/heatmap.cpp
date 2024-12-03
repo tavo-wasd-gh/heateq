@@ -40,6 +40,11 @@ Heatmap::Heatmap(const Heatmap &obj)
 {
 }
 
+Heatmap::~Heatmap()
+{
+	// No heap allocation
+}
+
 Heatmap &Heatmap::operator=(const Heatmap &obj)
 {
 	if (this != &obj) {
@@ -60,16 +65,12 @@ double Heatmap::operator[](size_t i)
 	return map[i];
 }
 
-Heatmap::~Heatmap()
-{
-	// No heap allocation
-}
-
 void Heatmap::StepFDM(double dt)
 {
 	if (dt > pow(d, 2) / (2 * c)) {
 		std::ostringstream error;
-		error << "time step dt = " << dt << " exceeds stability limit: ";
+		error << "time step dt = " << dt
+		      << " exceeds stability limit: ";
 		error << "dt <= " << pow(d, 2) / (2 * c);
 		throw std::invalid_argument(error.str());
 	}
@@ -109,13 +110,24 @@ size_t Heatmap::Cols()
 	return n;
 }
 
-void Heatmap::Set(size_t i, size_t j, double value)
+const std::vector<double> &Heatmap::Map()
+{
+	return map;
+}
+
+void Heatmap::Set(size_t i, size_t j, double temp)
 {
 	if (i >= map.size() / n || j >= n) {
 		throw std::out_of_range("index out of range");
 	}
 
-	map[i * n + j] = value;
+	if (temp < 0) {
+		std::ostringstream error;
+		error << "invalid temperature: " << temp << "K";
+		throw std::out_of_range(error.str());
+	}
+
+	map[i * n + j] = temp;
 }
 
 std::string Heatmap::Display()
@@ -153,8 +165,14 @@ std::string Heatmap::Report()
 
 	report << c << "," << n << "," << d << ",";
 
-	for (size_t i = 0; i < map.size(); ++i) {
-		report << map[i] << ",";
+	size_t size = map.size();
+
+	for (size_t i = 0; i < size; ++i) {
+		if (i != size - 1) {
+			report << map[i] << ",";
+		} else {
+			report << map[i];
+		}
 	}
 
 	return report.str();
