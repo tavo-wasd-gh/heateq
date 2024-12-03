@@ -1,7 +1,7 @@
 # heateq
 Métodos para resolver numéricamente la ecuación de calor en dos dimensiones
 
-![](heat.gif)
+![](content/heat.gif)
 
 | Material                                | Diffusivity (mm²/s) |
 |-----------------------------------------|---------------------|
