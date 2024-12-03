@@ -4,16 +4,16 @@ GO = go
 HUGO = hugo
 
 CXX = g++
-CXXFLAGS = -std=c++11 -O2 -Wall -Wextra -Wpedantic
+CXXFLAGS = -std=c++11 -O2 -Wall -Wextra -Wpedantic -fopenmp
 LXX = g++
-LXXFLAGS =
+LXXFLAGS = -fopenmp -lpthread
 
 CPPSRC = \
-			src/cpp/heatmap.cpp \
-			src/cpp/main.cpp \
+	 src/cpp/heatmap.cpp \
+	 src/cpp/main.cpp \
 
 CPPHEAD = \
-			src/cpp/heatmap.hpp \
+	  src/cpp/heatmap.hpp \
 
 CPPOBJ = $(CPPSRC:.cpp=.o)
 

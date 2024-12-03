@@ -1,4 +1,5 @@
 #include <cmath>
+#include <omp.h>
 #include <sstream>
 #include <string>
 #include <numeric>
@@ -79,6 +80,12 @@ void Heatmap::StepFDM(double dt)
 
 	Heatmap prev = *this;
 
+// El código realiza una iteración sobre una matriz representada en formato 1D
+// (prev y map) y calcula una simulación basada en un esquema de diferencias
+// finitas en dos dimensiones.
+// El pragma #pragma omp parallel for paraleliza el bucle del índice i,
+// distribuyendo las filas de la matriz entre los hilos.
+#pragma omp parallel for
 	for (size_t i = 1; i < m - 1; ++i) {
 		for (size_t j = 1; j < n - 1; ++j) {
 			double ddT_x =
