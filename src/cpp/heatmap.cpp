@@ -5,17 +5,28 @@
 #include <numeric>
 #include "heatmap.hpp"
 
+/* Constructor principal: Inicializa una matriz de tamaño m x n con un valor
+ * constante HM_AMBIENT. */
 Heatmap::Heatmap(size_t m, size_t n, double c, double d)
-	: n(n)
-	, map(m * n, HM_AMBIENT)
-	, d(d)
-	, c(c)
+	: n(n) /* Número de columnas */
+	, map(m * n, HM_AMBIENT) /* Inicializa std::vector<double> */
+	, d(d) /* Espaciado entre nodos */
+	, c(c) /* Coeficiente de difusión */
 {
+	/* Validación: La matriz debe tener al menos un elemento, esta
+	 * validación sí es necesaria ya que std::vector permite vectores de
+	 * tamaño 0, pero para efectos de este módulo esto no es viable */
 	if (m == 0 || n == 0) {
 		throw std::out_of_range("must have at least one element");
 	}
+
+	/* No se realizan otras validaciones ya que las limitaciones como un
+	 * máximo de nodos o de memoria que puede alojar un elemento de tipo
+	 * std::vector se las dejamos a la implementación de la STL del caso */
 }
 
+/* Constructor adicional:
+ * Inicializa la matriz con un valor inicial de temperatura. */
 Heatmap::Heatmap(size_t m, size_t n, double c, double d, double temp)
 	: n(n)
 	, map(m * n, temp)
@@ -26,6 +37,8 @@ Heatmap::Heatmap(size_t m, size_t n, double c, double d, double temp)
 		throw std::out_of_range("must have at least one element");
 	}
 
+	/* Para este caso, sí se debe agregar una comprobación de la temperatura
+	 * ya que no hay otros métodos para evitar un error como este */
 	if (temp < 0) {
 		std::ostringstream error;
 		error << "invalid temperature: " << temp << "K";
@@ -33,6 +46,8 @@ Heatmap::Heatmap(size_t m, size_t n, double c, double d, double temp)
 	}
 }
 
+/* Constructor de copia: Copia los datos de otro objeto Heatmap, mediante un
+ * deep copy */
 Heatmap::Heatmap(const Heatmap &obj)
 	: n(obj.n)
 	, map(obj.map)
@@ -43,9 +58,11 @@ Heatmap::Heatmap(const Heatmap &obj)
 
 Heatmap::~Heatmap()
 {
-	// No heap allocation
+	/* No se utilizan recursos dinámicos de memoria, por lo que no hace
+	 * falta desalocar nada sino que todo se maneja en el stack. */
 }
 
+/* Operador de asignación: Copia los datos de otro Heatmap en 'this' */
 Heatmap &Heatmap::operator=(const Heatmap &obj)
 {
 	if (this != &obj) {
@@ -57,6 +74,8 @@ Heatmap &Heatmap::operator=(const Heatmap &obj)
 	return *this;
 }
 
+/* Sobrecarga del operador [] para acceder a un elemento de la matriz de manera
+ * segura y conveniente. */
 double Heatmap::operator[](size_t i)
 {
 	if (i >= map.size()) {
@@ -66,6 +85,7 @@ double Heatmap::operator[](size_t i)
 	return map[i];
 }
 
+/* Simula un paso de tiempo utilizando diferencias finitas. */
 void Heatmap::StepFDM(double dt)
 {
 	if (dt > pow(d, 2) / (2 * c)) {
@@ -80,11 +100,12 @@ void Heatmap::StepFDM(double dt)
 
 	Heatmap prev = *this;
 
-// El código realiza una iteración sobre una matriz representada en formato 1D
-// (prev y map) y calcula una simulación basada en un esquema de diferencias
-// finitas en dos dimensiones.
-// El pragma #pragma omp parallel for paraleliza el bucle del índice i,
-// distribuyendo las filas de la matriz entre los hilos.
+	/* El código realiza una iteración sobre una matriz representada en
+	 * formato 1D (prev y map) y calcula una simulación basada en un esquema
+	 * de diferencias finitas en dos dimensiones.
+	 * El pragma #pragma omp parallel for paraleliza el bucle del índice i,
+	 * distribuyendo las filas de la matriz entre los hilos. */
+
 #pragma omp parallel for
 	for (size_t i = 1; i < m - 1; ++i) {
 		for (size_t j = 1; j < n - 1; ++j) {
@@ -117,11 +138,15 @@ size_t Heatmap::Cols()
 	return n;
 }
 
+/* Retorna la matriz completa como una referencia constante, es decir, no se
+ * puede modificar, pero, no aloja memoria extra y se pueden consultar
+ * seguramente los elementos de la matriz o imprimir como se guste */
 const std::vector<double> &Heatmap::Map()
 {
 	return map;
 }
 
+/* Establece un valor de temperatura en una celda específica */
 void Heatmap::Set(size_t i, size_t j, double temp)
 {
 	if (i >= map.size() / n || j >= n) {
@@ -137,6 +162,7 @@ void Heatmap::Set(size_t i, size_t j, double temp)
 	map[i * n + j] = temp;
 }
 
+/* Genera una representación textual de la matriz. */
 std::string Heatmap::Display()
 {
 	size_t size = map.size();
@@ -166,6 +192,7 @@ std::string Heatmap::Display()
 	return output.str();
 }
 
+/* Genera un informe con los parámetros de la matriz y sus valores. */
 std::string Heatmap::Report()
 {
 	std::ostringstream report;
@@ -185,6 +212,7 @@ std::string Heatmap::Report()
 	return report.str();
 }
 
+/* Calcula el promedio de los valores en la matriz. */
 double Heatmap::Avg()
 {
 	return std::accumulate(map.begin(), map.end(), 0) /
