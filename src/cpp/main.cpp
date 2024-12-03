@@ -3,14 +3,14 @@
 
 int main()
 {
-	int steps = 400; // Iteraciones
-	double dt = 0.01; // dt por iteración
+	int steps = 400; /* Iteraciones */
+	double dt = 0.01; /* dt por iteración */
 
-	// Para una placa de hierro (c = 22.8x10^-6 m^s/s) de 40x60 cm,
-	// Grilla de 50 x 75 nodos, cada uno de longitud 8x10^-3 m
+	/* Para una placa de hierro (c = 22.8x10^-6 m^s/s) de 40x60 cm,
+	 * Grilla de 50 x 75 nodos, cada uno de longitud 8x10^-3 m */
 	Heatmap hierro(50, 75, 22.8e-6, 8e-3);
 
-	// Punto caliente (100 C) de 4x4 nodos en el medio
+	/* Punto caliente (100 C) de 4x4 nodos en el medio */
 	for (size_t i = hierro.Rows() / 2 - 4; i < hierro.Rows() / 2 + 4; i++) {
 		for (size_t j = hierro.Cols() / 2 - 4;
 		     j < hierro.Cols() / 2 + 4; j++) {
@@ -18,28 +18,28 @@ int main()
 		}
 	}
 
-	// Estado después de 4s
+	/* Estado después de 4s */
 	for (int i = 1; i <= steps; i++) {
 		hierro.StepFDM(dt);
 	}
 
-	// El miembro &Map() permite accesar de manera
-	// segura el mapa del objeto, sin modificarlo
-	const std::vector<double> &map = hierro.Map();
+	/* El miembro &Map() permite accesar de manera
+	 * segura el mapa del objeto, sin modificarlo */
+	//const std::vector<double> &map = hierro.Map();
 
 	//map[0] = 0.0; // error: assignment of read-only location
 	//std::cout << map[0] << std::endl; // Sí permite consultar
 
-	// Vamos a crear un reporte para graficarlo con el paso
-	// del tiempo, para esto, necesitamos imprimir un reporte
-	// de cada grilla con su índice temporal, y los datos
-	// utilizados para calcularla. Esta funcionalidad
-	// se encuentra en el miembro Report()
+	/* Vamos a crear un reporte para graficarlo con el paso
+	 * del tiempo, para esto, necesitamos imprimir un reporte
+	 * de cada grilla con su índice temporal, y los datos
+	 * utilizados para calcularla. Esta funcionalidad
+	 * se encuentra en el miembro Report() */
 
-	// Placa de cobre (c = 113x10^-6) de 40x60 cm,
+	/* Placa de cobre (c = 113x10^-6) de 40x60 cm */
 	Heatmap cobre(50, 75, 113e-6, 8e-3);
 
-	// Punto caliente (100 C) de 4x4 nodos en el medio
+	/* Punto caliente (100 C) de 4x4 nodos en el medio */
 	for (size_t i = cobre.Rows() / 2 - 4; i < cobre.Rows() / 2 + 4; i++) {
 		for (size_t j = cobre.Cols() / 2 - 4; j < cobre.Cols() / 2 + 4;
 		     j++) {
@@ -47,33 +47,34 @@ int main()
 		}
 	}
 
-	// Estado luego de condiciones iniciales
+	/* Estado luego de condiciones iniciales */
 	double time = 0.0;
 	//std::cout << time << "," << cobre.Report() << std::endl;
-	// Estado después de 4s
+
+	/* Estado después de 4s */
 	for (int i = 1; i <= steps; i++) {
 		cobre.StepFDM(dt);
 		time += dt;
 		//std::cout << time << "," << cobre.Report() << std::endl;
 	}
 
-	// Para este miembro, las condiciones no permiten dt
-	// mayor a 0.283186s ya que se alcanza inestabilidad
+	/* Para este miembro, las condiciones no permiten dt
+	 * mayor a 0.283186s ya que se alcanza inestabilidad */
 
-	//cobre.StepFDM(0.8); // throw std::invalid_argument
+	//cobre.StepFDM(0.8); /* throw std::invalid_argument */
 
-	// Note que sí se permite para el hierro, ya que
-	// el criterio de inestabilidad se alcanza en:
-	// dt > 1.40351s (con espaciado de este miembro)
+	/* Note que sí se permite para el hierro, ya que
+	 * el criterio de inestabilidad se alcanza en:
+	 * dt > 1.40351s (con espaciado de este miembro) */
 
 	hierro.StepFDM(0.8);
 
-	// Ahora, creamos una visualización interesante
+	/* Ahora, creamos una visualización interesante */
 	Heatmap oro(50, 96, 127e-6, 8e-3);
 
 	double dt_au = 0.01;
 	double time_oro = 0.0;
-	int steps_au = 400; // Iteraciones
+	int steps_au = 400; /* Iteraciones */
 
 	for (int n = 1; n <= steps_au; n++) {
 		if (n < 40) {
@@ -151,7 +152,7 @@ int main()
 
 		oro.StepFDM(dt_au);
 		time_oro += dt_au;
-		std::cout << time_oro << "," << oro.Report() << std::endl;
+		//std::cout << time_oro << "," << oro.Report() << std::endl;
 	}
 
 	return 0;
