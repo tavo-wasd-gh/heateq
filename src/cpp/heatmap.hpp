@@ -20,13 +20,13 @@ class Heatmap {
 	// Copy
 	Heatmap(const Heatmap &obj);
 
+	~Heatmap();
+
 	// Assign
 	Heatmap &operator=(const Heatmap &obj);
 
 	// Subscript
 	double operator[](size_t i);
-
-	~Heatmap();
 
 	// Simulation
 	void StepFDM(double dt);
@@ -34,6 +34,7 @@ class Heatmap {
 	size_t Size();
 	size_t Rows();
 	size_t Cols();
+	const std::vector<double> &Map();
 
 	void Set(size_t i, size_t j, double value);
 
