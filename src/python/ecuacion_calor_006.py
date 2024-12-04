@@ -149,73 +149,51 @@ class ecuacion_calor:
 
 # Uso de la clase HeatEquationSolver
 # Aquí puedes definir los valores de Lx y Ly, tipos de condiciones de frontera y condición inicial
+
+"IMPORTANTE" ##main solicitando datos
+int main(Lx, Ly, Nx, Ny):
+c = input ("Ingrese el valor de la constante de difusión:")# Constante de difusión del calor, LA DEJAMOS AS+Í O PEDIMOS LOS DATOS PARA CALCULARLA?
+Lx = input ("Ingrese el valor del dominio en x:")# largo del dominio en x (Lx) en metros
+Ly = input ("Ingrese el valor del dominio en y:") #largo del dominio en y (Ly) en metros
+Nx = input ("Ingrese la cantidad de puntos en x:")# Número de puntos de la malla en x CREO QUE ESTOS SI NOS TOCA PONERLOS A NOSOTROS!!
+Ny = input ("Ingrese la cantidad de puntos en y:")# Número de puntos de la malla en y
+dt = input ("Ingrese los segundos calculados*:")# Paso de tiempo en segundos
+
 def menu():
-    print("\n--- Menú Principal ---")
-    print("1. Configurar parámetros del dominio")
-    print("2. Configurar condiciones de frontera")
-    print("3. Configurar condición inicial")
-    print("4. Resolver ecuación del calor")
-    print("5. Salir")
-    return input("Seleccione una opción: ")
+# que el menu pida condiciones de frontera y las condiciones iniciales para luego definir las variables de esa manera ok?
+condiciones_frontera = 0 #establezco las condiciones de frontera
+    'izquierda': '',   # Opciones: 'Dirichlet', 'Neumann', 'Periódica'
+    'derecha': '',
+    'inferior': '',
+    'superior': '',
+    print("Escoga la condición para cada extremo:")
+    print("D: Dirichlet")
+    print("N: Neumann")
+    print("P: Periódica")
 
-def configurar_dominio():
-    print("\n--- Configurar Parámetros del Dominio ---")
-    Lx = float(input("Ingrese el largo del dominio en x (Lx) en metros: "))
-    Ly = float(input("Ingrese el largo del dominio en y (Ly) en metros: "))
-    Nx = int(input("Ingrese el número de puntos de la malla en x (Nx): "))
-    Ny = int(input("Ingrese el número de puntos de la malla en y (Ny): "))
-    dt = float(input("Ingrese el paso de tiempo (dt) en segundos: "))
-    c = float(input("Ingrese la constante de difusión del calor (c): "))
-    return {"Lx": Lx, "Ly": Ly, "Nx": Nx, "Ny": Ny, "dt": dt, "c": c}
+opcion = ""
+while opcion != "D" and opcion != "N" and opcion != "P":
+  opcion = input("Ingrese una opción: ")
+  if opcion == "D" or "N" or "P":
+    condiciones_frontera['izquierda'] = input("Lado izquierdo: ")
+    condiciones_frontera['derecha'] = input("Lado derecho: ")
+    condiciones_frontera['inferior'] = input("Lado inferior: ")
+    condiciones_frontera['superior'] = input("Lado superior: ")
+    
+	for lado, condicion in condiciones_frontera.items():
+        print(f"{lado.capitalize()}: {condicion}")
 
-def configurar_condiciones_frontera():
-    print("\n--- Configurar Condiciones de Frontera ---")
-    opciones = ["Dirichlet", "Neumann", "Periódica"]
-    frontera = {}
-    for lado in ["izquierda", "derecha", "inferior", "superior"]:
-        print(f"Opciones para la frontera {lado}: {opciones}")
-        frontera[lado] = input(f"Seleccione condición para la frontera {lado}: ")
-        while frontera[lado] not in opciones:
-            print("Opción no válida. Intente de nuevo.")
-            frontera[lado] = input(f"Seleccione condición para la frontera {lado}: ")
-    return frontera
+    return condiciones_frontera
 
-def configurar_condicion_inicial():
-    print("\n--- Configurar Condición Inicial ---")
-    opciones = ["punto_caliente", "gradiente_lineal", "onda"]
-    condicion = input(f"Seleccione la condición inicial ({', '.join(opciones)}): ")
-    while condicion not in opciones:
-        print("Opción no válida. Intente de nuevo.")
-        condicion = input(f"Seleccione la condición inicial ({', '.join(opciones)}): ")
-    return condicion
-
-# Función principal
-def main():
-    parametros = None
-    condiciones_frontera = None
-    condicion_inicial = None
-
-    while True:
-        opcion = menu()
-        if opcion == "1":
-            parametros = configurar_dominio()
-        elif opcion == "2":
-            condiciones_frontera = configurar_condiciones_frontera()
-        elif opcion == "3":
-            condicion_inicial = configurar_condicion_inicial()
-        elif opcion == "4":
-            if parametros and condiciones_frontera and condicion_inicial:
-                ecuacion = ecuacion_calor(parametros, condiciones_frontera, condicion_inicial)
-                ecuacion.resolucion_ec_()
-            else:
-                print("Faltan configuraciones. Por favor, complete todas las configuraciones antes de resolver.")
-        elif opcion == "5":
-            print("¡Saliendo del programa!")
-            break
-        else:
-            print("Opción no válida. Por favor, inténtelo de nuevo.")
-
-# Ejecutar el programa
 if __name__ == "__main__":
     main()
 
+# Configura la condición inicial
+condiciones_frontera = 'punto_caliente'  # Opciones: 'punto_caliente', 'gradiente_lineal', 'onda ##hablarlo con el grupo como desarrollar
+
+
+
+
+### ya para generarlo
+ecuacion = ecuacion_calor("Lx, Ly, Nx, Ny, dt, c, condiciones_frontera, condiciones_iniciales, tmax")
+ecuacion.resolucion_ec_()
