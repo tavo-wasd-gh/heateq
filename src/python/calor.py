@@ -54,7 +54,7 @@ class ecuacion_calor:
         elif self.condiciones_iniciales == 'uniforme':
             self.u[:, :] = self.tmax
 
-    def definir_condiciones_de_frontera(self): #Hay que agregar que funque para periodica
+    def definir_condiciones_de_frontera(self):
         """
         Aplica las condiciones de frontera.
         """
@@ -63,25 +63,30 @@ class ecuacion_calor:
             self.u[0, :] = 0.0
         elif self.condiciones_frontera['izquierda'] == 'Neumann':
             self.u[0, :] = self.u[1, :]
-
+        elif self.condiciones_frontera['izquierda'] == 'Periódica':
+            self.u[0, :] = self.u[-2, :]  # Igual que el borde derecho
         # Frontera derecha
         if self.condiciones_frontera['derecha'] == 'Dirichlet':
             self.u[-1, :] = 0.0
         elif self.condiciones_frontera['derecha'] == 'Neumann':
             self.u[-1, :] = self.u[-2, :]
-
+        elif self.condiciones_frontera['derecha'] == 'Periódica':
+            self.u[-1, :] = self.u[1, :]  #Igual que el borde izquierdo
         # Frontera inferior
         if self.condiciones_frontera['inferior'] == 'Dirichlet':
             self.u[:, 0] = 0.0
         elif self.condiciones_frontera['inferior'] == 'Neumann':
             self.u[:, 0] = self.u[:, 1]
-
+        elif self.condiciones_frontera['inferior'] == 'Periódica':
+            self.u[:, 0] = self.u[:, -2]  # Igual que el borde superior
         # Frontera superior
         if self.condiciones_frontera['superior'] == 'Dirichlet':
             self.u[:, -1] = 0.0
         elif self.condiciones_frontera['superior'] == 'Neumann':
             self.u[:, -1] = self.u[:, -2]
-
+        elif self.condiciones_frontera['superior'] == 'Periódica':
+            self.u[:, -1] = self.u[:, 1]  # Igual que el borde inferior
+    
     def resolucion_ec_calor(self):
         """
         Ejecuta la simulación de la ecuación de calor en 2D.
@@ -111,7 +116,7 @@ class ecuacion_calor:
         fig, ax = plt.subplots(figsize=(6, 6))
         img = ax.imshow(self.snapshots[0], extent=[0, self.Lx, 0, self.Ly], origin='lower', cmap='hot')
         cbar = plt.colorbar(img, ax=ax)
-        cbar.set_label('Temperatura')
+        cbar.set_label('Temperatura (k) ')
 
         def actualizar(frame):
             img.set_data(self.snapshots[frame])
@@ -143,7 +148,7 @@ def configurar_dominio():
     return {"Lx": Lx, "Ly": Ly, "Nx": Nx, "Ny": Ny, "dt": dt, "c": c, "T": T, "tmax": tmax}
 
 def configurar_condiciones_frontera():
-    opciones = ["Dirichlet", "Neumann"]
+    opciones = ["Dirichlet", "Neumann", "Periódica"]
     frontera = {}
     for lado in ["izquierda", "derecha", "inferior", "superior"]:
         print(f"Condiciones disponibles para {lado}: {', '.join(opciones)}")
