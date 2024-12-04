@@ -1,5 +1,8 @@
 # heateq
-Métodos para resolver numéricamente la ecuación de calor en dos dimensiones
+
+Métodos para resolver numéricamente la ecuación de calor en dos dimensiones.
+Puede buscar detalles de la implementación y ejemplos en la
+[documentación](https://tavo-wasd-gh.github.io/heateq/).
 
 ![](content/heat.gif)
 
